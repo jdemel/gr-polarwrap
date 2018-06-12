@@ -26,9 +26,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_polarwrap_EXPORTS
-#  define POLARWRAP_API __GR_ATTR_EXPORT
+#define POLARWRAP_API __GR_ATTR_EXPORT
 #else
-#  define POLARWRAP_API __GR_ATTR_IMPORT
+#define POLARWRAP_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_POLARWRAP_API_H */

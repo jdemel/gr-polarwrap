@@ -1,0 +1,283 @@
+options:
+  parameters:
+    author: Johannes Demel
+    catch_exceptions: 'True'
+    category: '[Polar]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: hb
+    hier_block_src_path: '.:'
+    id: hier_polar_decoder
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Polar Decoder
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: polar_info_bytes
+  id: variable
+  parameters:
+    comment: ''
+    value: info_size // 8
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1000, 220.0]
+    rotation: 0
+    state: true
+- name: var_decoder
+  id: variable_polarwrap_decoderwrap
+  parameters:
+    block_size: frame_size
+    comment: ''
+    decoder_impl: mixed
+    dim1: '1'
+    dim2: '4'
+    error_detection_type: '16'
+    frozen_bit_positions: frozen_bit_positions
+    list_size: list_size
+    ndim: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [760, 188.0]
+    rotation: 0
+    state: enabled
+- name: blocks_stream_to_tagged_stream_0
+  id: blocks_stream_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    len_tag_key: length_tag_key
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packet_len: polar_info_bytes
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1000, 324.0]
+    rotation: 0
+    state: enabled
+- name: fec_generic_decoder_0
+  id: fec_generic_decoder
+  parameters:
+    affinity: ''
+    alias: POLARdecoder
+    comment: ''
+    decoder: var_decoder
+    itype: float
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    otype: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [760, 332.0]
+    rotation: 0
+    state: enabled
+- name: frame_size
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Frame size (bits)
+    short_id: ''
+    type: intx
+    value: '936'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [432, 28.0]
+    rotation: 0
+    state: true
+- name: frozen_bit_positions
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Frozen Bit positions
+    short_id: ''
+    type: ''
+    value: np.arange(768, dtype=int)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 20.0]
+    rotation: 0
+    state: true
+- name: import_numpy
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import numpy as np
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 196.0]
+    rotation: 0
+    state: true
+- name: info_size
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Info size (bits)
+    short_id: ''
+    type: intx
+    value: 256 - 8
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 28.0]
+    rotation: 0
+    state: true
+- name: interleaver_indices
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Interleaver indices
+    short_id: ''
+    type: ''
+    value: np.arange(936, dtype=int)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [920, 28.0]
+    rotation: 0
+    state: true
+- name: length_tag_key
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Length Tag Key
+    short_id: ''
+    type: str
+    value: '"rx_len"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1104, 28.0]
+    rotation: 0
+    state: true
+- name: list_size
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: List size
+    short_id: ''
+    type: intx
+    value: '4'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [728, 20.0]
+    rotation: 0
+    state: true
+- name: pad_sink_0
+  id: pad_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    label: out
+    num_streams: '1'
+    optional: 'False'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1336, 332.0]
+    rotation: 0
+    state: true
+- name: pad_source_0
+  id: pad_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    label: in
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_streams: '1'
+    optional: 'False'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [376, 332.0]
+    rotation: 0
+    state: true
+- name: symbolmapping_interleaver_0
+  id: symbolmapping_interleaver
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    interleaver_indices: interleaver_indices
+    interleaver_mode: deinterleave
+    is_packed: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 316.0]
+    rotation: 0
+    state: true
+
+connections:
+- [blocks_stream_to_tagged_stream_0, '0', pad_sink_0, '0']
+- [fec_generic_decoder_0, '0', blocks_stream_to_tagged_stream_0, '0']
+- [pad_source_0, '0', symbolmapping_interleaver_0, '0']
+- [symbolmapping_interleaver_0, '0', fec_generic_decoder_0, '0']
+
+metadata:
+  file_format: 1

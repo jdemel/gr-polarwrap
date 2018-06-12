@@ -22,51 +22,63 @@
 #ifndef INCLUDED_POLARWRAP_DECODERWRAP_H
 #define INCLUDED_POLARWRAP_DECODERWRAP_H
 
-#include <polarwrap/api.h>
 #include <gnuradio/fec/generic_decoder.h>
 #include <polarcode/decoding/decoder.h>
+#include <polarcode/puncturer.h>
+#include <polarwrap/api.h>
+#include <memory>
+
 
 namespace gr {
-  namespace polarwrap {
+namespace polarwrap {
 
-    /*!
-     * \brief <+description+>
-     *
-     */
-    class POLARWRAP_API decoderwrap: public gr::fec::generic_decoder
-    {
-    public:
+/*!
+ * \brief <+description+>
+ *
+ */
+class POLARWRAP_API decoderwrap : public gr::fec::generic_decoder
+{
+public:
+    ~decoderwrap();
 
-        ~decoderwrap();
+    static gr::fec::generic_decoder::sptr make(int block_size,
+                                               int list_size,
+                                               std::vector<unsigned> frozen_bit_positions,
+                                               int error_detection_type,
+                                               std::string decoder_impl);
 
-        static gr::fec::generic_decoder::sptr
-        make(int block_size, int list_size, std::vector<unsigned> frozen_bit_positions, int frame_size, int error_detection_type, std::string decoder_impl);
+    // FECAPI
+    void generic_work(void* in_buffer, void* out_buffer);
+    double rate() { return (1.0 * num_info_bits() / get_input_size()); };
+    int get_input_size() { return d_puncturer->blockLength(); };
+    int get_output_size() { return num_info_bits() / 8; };
+    bool set_frame_size(unsigned int frame_size) { return false; };
+    const char* get_input_conversion() { return "none"; };
+    const char* get_output_conversion() { return "pack"; };
 
-        // FECAPI
-        void generic_work(void *in_buffer, void *out_buffer);
-        double rate() {return (1.0 * get_input_size() / get_output_size());};
-        // int get_input_size(){return num_info_bits() / 8;};
-        int get_input_size(){return d_frame_size;};
-        int get_output_size(){return num_info_bits() / 8;};
-        bool set_frame_size(unsigned int frame_size){return false;};
-        const char* get_input_conversion(){return "none";};
-        const char* get_output_conversion(){return "pack";};
+private:
+    decoderwrap(int block_size,
+                int list_size,
+                std::vector<unsigned> frozen_bit_positions,
+                int error_detection_type,
+                std::string decoder_impl);
 
-    private:
-        decoderwrap(int block_size, int list_size, std::vector<unsigned> frozen_bit_positions, int frame_size, int error_detection_type, std::string decoder_impl);
-        PolarCode::Decoding::Decoder* d_decoder;
-        int d_frame_size;
-        int d_error_detection_type;
-        float* d_input_buffer;
-        char* d_output_buffer;
+    std::unique_ptr<PolarCode::Decoding::Decoder> d_decoder;
+    std::unique_ptr<PolarCode::Puncturer> d_puncturer;
+    int d_error_detection_type;
+    float* d_input_buffer;
+    char* d_output_buffer;
 
-        void set_error_detection(int error_detection_type);
-        int num_info_bits(){return output_size() - (d_error_detection_type ? 8 : 0);}
-        int output_size(){return d_decoder->blockLength() - d_decoder->frozenBits().size();}
-    };
+    void make_decoder(const int parent_block_size,
+                      const int list_size,
+                      const std::vector<unsigned>& frozen_bit_positions,
+                      const std::string& decoder_impl);
+    void set_error_detection(int error_detection_type);
+    int num_info_bits() { return output_size(); }
+    int output_size() { return d_decoder->infoLength(); }
+};
 
-  } // namespace polarwrap
+} // namespace polarwrap
 } // namespace gr
 
 #endif /* INCLUDED_POLARWRAP_DECODERWRAP_H */
-

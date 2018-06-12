@@ -1,0 +1,242 @@
+options:
+  parameters:
+    author: Johannes Demel
+    catch_exceptions: 'True'
+    category: '[Polar]'
+    cmake_opt: ''
+    comment: 'Perform Encoding and Interleaving
+
+
+      Be careful! This block assumes that some MAC already inserted a CRC.
+
+      The decoder will rely on it!'
+    copyright: ''
+    description: Perform Encoding and Interleaving
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: hb
+    hier_block_src_path: '.:'
+    id: hier_polar_encoder
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Polar Encoder
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: var_encoder
+  id: variable_polarwrap_encoderwrap
+  parameters:
+    block_size: frame_size
+    comment: ''
+    dim1: '1'
+    dim2: '4'
+    error_detection_type: '0'
+    frozen_bit_positions: frozen_bit_positions
+    ndim: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [632, 236.0]
+    rotation: 0
+    state: enabled
+- name: fec_generic_encoder_0
+  id: fec_generic_encoder
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    encoder: var_encoder
+    itype: byte
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    otype: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [576, 460.0]
+    rotation: 0
+    state: enabled
+- name: fec_tagged_encoder_0
+  id: fec_tagged_encoder
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    encoder: var_encoder
+    itype: byte
+    lentagname: length_tag_key
+    maxoutbuf: frame_size // 8
+    minoutbuf: frame_size // 8
+    mtu: '1500'
+    otype: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [576, 364.0]
+    rotation: 0
+    state: disabled
+- name: frame_size
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Frame size (bits)
+    short_id: ''
+    type: intx
+    value: '936'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [432, 28.0]
+    rotation: 0
+    state: true
+- name: frozen_bit_positions
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Frozen Bit positions
+    short_id: ''
+    type: ''
+    value: np.arange(256, dtype=int)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 20.0]
+    rotation: 0
+    state: true
+- name: import_numpy
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import numpy as np
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 212.0]
+    rotation: 0
+    state: true
+- name: interleaver_indices
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Interleaver indices
+    short_id: ''
+    type: ''
+    value: np.arange(936, dtype=int)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 28.0]
+    rotation: 0
+    state: true
+- name: length_tag_key
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Length Tag Key
+    short_id: ''
+    type: str
+    value: '"packet_len"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [880, 28.0]
+    rotation: 0
+    state: true
+- name: pad_sink_0
+  id: pad_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    label: out
+    num_streams: '1'
+    optional: 'False'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1064, 380.0]
+    rotation: 0
+    state: true
+- name: pad_source_0
+  id: pad_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    label: in
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_streams: '1'
+    optional: 'False'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [408, 380.0]
+    rotation: 0
+    state: true
+- name: symbolmapping_interleaver_0
+  id: symbolmapping_interleaver
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    interleaver_indices: interleaver_indices
+    interleaver_mode: interleave
+    is_packed: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 364.0]
+    rotation: 0
+    state: true
+
+connections:
+- [fec_generic_encoder_0, '0', symbolmapping_interleaver_0, '0']
+- [fec_tagged_encoder_0, '0', symbolmapping_interleaver_0, '0']
+- [pad_source_0, '0', fec_generic_encoder_0, '0']
+- [pad_source_0, '0', fec_tagged_encoder_0, '0']
+- [symbolmapping_interleaver_0, '0', pad_sink_0, '0']
+
+metadata:
+  file_format: 1

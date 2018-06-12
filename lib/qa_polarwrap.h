@@ -31,9 +31,9 @@
 
 class __GR_ATTR_EXPORT qa_polarwrap
 {
- public:
-  //! return suite of tests for all of gr-filter directory
-  static CppUnit::TestSuite *suite();
+public:
+    //! return suite of tests for all of gr-filter directory
+    static CppUnit::TestSuite* suite();
 };
 
 #endif /* _QA_POLARWRAP_H_ */

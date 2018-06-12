@@ -1,0 +1,58 @@
+id: variable_polarwrap_decoderwrap
+label: Polar Decoder Variable
+flags: [ show_id ]
+category: '[Polar]'
+
+parameters:
+-   id: ndim
+    label: Parallelism
+    dtype: enum
+    default: '0'
+    options: ['0', '1', '2']
+-   id: dim1
+    label: Dimension 1
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if (int(ndim) >= 1) else 'all') }
+-   id: dim2
+    label: Dimension 2
+    dtype: int
+    default: '4'
+    hide: ${ ('none' if (int(ndim) >= 2) else 'all') }
+-   id: block_size
+    label: Block size (N)
+    dtype: int
+-   id: list_size
+    label: 'List size'
+    dtype: int
+-   id: frozen_bit_positions
+    label: Frozen Bit Positions
+    dtype: int_vector
+-   id: error_detection_type
+    label: Error detection type
+    dtype: int
+-   id: decoder_impl
+    label: Decoder type
+    dtype: string
+value: ${ polarwrap.decoderwrap.make(block_size, list_size, frozen_bit_positions, error_detection_type, decoder_impl) }
+
+templates:
+    imports: import polarwrap
+    var_make: |-
+        % if int(ndim)==0:
+        self.${id} = ${id} = polarwrap.decoderwrap.make(${block_size},\
+        ${list_size}, ${frozen_bit_positions}, \
+        ${error_detection_type}, ${decoder_impl})\
+        % elif int(ndim)==1:
+        self.${id} = ${id} = list(map((lambda a: polarwrap.decoderwrap.make(\
+        ${block_size}, ${list_size}, ${frozen_bit_positions}, \
+        ${error_detection_type}, ${decoder_impl})),\
+        range(0, ${dim1})))
+        % else:
+        self.${id} = ${id} = list(map((lambda b: map((lambda a: \
+        polarwrap.decoderwrap.make(${block_size}, ${list_size}, \
+        ${frozen_bit_positions}, ${error_detection_type}, \
+        ${decoder_impl})), range(0, ${dim2}))), range(0, ${dim1})))
+        % endif
+
+file_format: 1

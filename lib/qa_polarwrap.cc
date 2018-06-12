@@ -28,10 +28,9 @@
 
 #include "qa_polarwrap.h"
 
-CppUnit::TestSuite *
-qa_polarwrap::suite()
+CppUnit::TestSuite* qa_polarwrap::suite()
 {
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("polarwrap");
+    CppUnit::TestSuite* s = new CppUnit::TestSuite("polarwrap");
 
-  return s;
+    return s;
 }
