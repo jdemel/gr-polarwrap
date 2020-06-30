@@ -87,4 +87,5 @@
         "unordered_set": "cpp",
         "valarray": "cpp"
     },
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
 }

@@ -21,9 +21,6 @@ except ImportError:
     from .polarwrap_python import *
 
 # import any pure python here
-
-from .frame_formatter import frame_formatter
-from .tacnet_mac_framer import tacnet_mac_framer
 from .configurator_polar import get_polar_configuration
 # from .configurator_gfdm import get_gfdm_configuration
 #
