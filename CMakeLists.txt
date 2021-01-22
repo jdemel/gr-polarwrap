@@ -114,6 +114,7 @@ endif(APPLE)
 ########################################################################
 find_package(Doxygen)
 find_package(PolarCode)
+find_package(fmt REQUIRED)
 
 ########################################################################
 # PyBind11 Related
