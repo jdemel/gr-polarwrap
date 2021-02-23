@@ -27,13 +27,14 @@
 #include <polarcode/puncturer.h>
 #include <polarwrap/api.h>
 #include <memory>
+#include <volk/volk_alloc.hh>
 
 
 namespace gr {
 namespace polarwrap {
 
 /*!
- * \brief <+description+>
+ * \brief GNU Radio wrapper for polar-codes decoder
  *
  */
 class POLARWRAP_API decoderwrap : public gr::fec::generic_decoder
@@ -66,8 +67,9 @@ private:
     std::unique_ptr<PolarCode::Decoding::Decoder> d_decoder;
     std::unique_ptr<PolarCode::Puncturer> d_puncturer;
     int d_error_detection_type;
-    float* d_input_buffer;
-    char* d_output_buffer;
+
+    volk::vector<float> d_input_buffer;
+    volk::vector<char> d_output_buffer;
 
     void make_decoder(const int parent_block_size,
                       const int list_size,

@@ -23,6 +23,7 @@
 #endif
 
 #include <gnuradio/io_signature.h>
+#include <fmt/ranges.h>
 #include <polarcode/errordetection/crc8.h>
 #include <polarwrap/decoderwrap.h>
 #include <volk/volk.h>
@@ -48,7 +49,8 @@ decoderwrap::decoderwrap(int block_size,
                          int error_detection_type,
                          std::string decoder_impl)
     : generic_decoder("polar"),
-      d_puncturer(new PolarCode::Puncturer(block_size, frozen_bit_positions))
+      d_puncturer(
+          std::make_unique<PolarCode::Puncturer>(block_size, frozen_bit_positions))
 {
     if (block_size % 8 != 0) {
         throw std::invalid_argument("block_size MUST be a multiple of 8!");
@@ -57,17 +59,11 @@ decoderwrap::decoderwrap(int block_size,
     make_decoder(parent_block_size, list_size, frozen_bit_positions, decoder_impl);
     set_error_detection(error_detection_type);
 
-    d_input_buffer = (float*)volk_malloc(sizeof(float) * d_decoder->blockLength(),
-                                         volk_get_alignment());
-    d_output_buffer =
-        (char*)volk_malloc(sizeof(char) * output_size(), volk_get_alignment());
+    d_input_buffer.resize(d_decoder->blockLength());
+    d_output_buffer.resize(output_size());
 }
 
-decoderwrap::~decoderwrap()
-{
-    volk_free(d_input_buffer);
-    volk_free(d_output_buffer);
-}
+decoderwrap::~decoderwrap() {}
 
 void decoderwrap::make_decoder(const int parent_block_size,
                                const int list_size,
@@ -88,11 +84,12 @@ void decoderwrap::set_error_detection(int error_detection_type)
 void decoderwrap::generic_work(void* in_buffer, void* out_buffer)
 {
     // auto start = std::chrono::high_resolution_clock::now();
-    d_puncturer->depuncture(d_input_buffer, (float*)in_buffer);
-    d_decoder->setSignal(d_input_buffer);
+
+    d_puncturer->depuncture(d_input_buffer.data(), (float*)in_buffer);
+    d_decoder->setSignal(d_input_buffer.data());
     d_decoder->decode();
-    d_decoder->getDecodedInformationBits(d_output_buffer);
-    memcpy(out_buffer, d_output_buffer, sizeof(char) * num_info_bits() / 8);
+    d_decoder->getDecodedInformationBits(d_output_buffer.data());
+    memcpy(out_buffer, d_output_buffer.data(), sizeof(char) * num_info_bits() / 8);
 
     // auto end = std::chrono::high_resolution_clock::now();
     // auto du = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
