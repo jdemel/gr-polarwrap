@@ -1,21 +1,8 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2018 Johannes Demel.
+ * Copyright 2018, 2021 Johannes Demel.
  *
- * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 
@@ -26,13 +13,18 @@
 #include <polarcode/encoding/butterfly_fip_packed.h>
 #include <polarcode/puncturer.h>
 #include <polarwrap/api.h>
+#include <volk/volk_alloc.hh>
 #include <memory>
 
 namespace gr {
 namespace polarwrap {
 
 /*!
- * \brief <+description+>
+ * \brief GNU Radio wrapper for polar-codes encoder
+ *
+ * \param block_size punctured code block size
+ * \param frozen_bit_positions sorted list of frozen bit positions
+ * \param error_detection_type Integer that specifies CRC size {0, 8, 16, 32}
  *
  */
 class POLARWRAP_API encoderwrap : public gr::fec::generic_encoder
@@ -63,8 +55,8 @@ private:
     int num_info_bits() { return enc_input_size() - d_error_detection_type; }
     int enc_input_size() { return d_encoder->infoLength(); }
     void set_error_detection(int error_detection_type);
-    char* d_input_buffer;
-    unsigned char* d_output_buffer;
+    volk::vector<char> d_input_buffer;
+    volk::vector<unsigned char> d_output_buffer;
 };
 
 } // namespace polarwrap

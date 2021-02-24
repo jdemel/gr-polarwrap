@@ -1,23 +1,9 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2018 Johannes Demel.
+ * Copyright 2018, 2021 Johannes Demel.
  *
- * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
 
 #ifndef INCLUDED_POLARWRAP_DECODERWRAP_H
 #define INCLUDED_POLARWRAP_DECODERWRAP_H
@@ -26,8 +12,8 @@
 #include <polarcode/decoding/decoder.h>
 #include <polarcode/puncturer.h>
 #include <polarwrap/api.h>
-#include <memory>
 #include <volk/volk_alloc.hh>
+#include <memory>
 
 
 namespace gr {
@@ -35,6 +21,13 @@ namespace polarwrap {
 
 /*!
  * \brief GNU Radio wrapper for polar-codes decoder
+ *
+ * \param block_size punctured code block size
+ * \param list_size CA-SCL list size ( >= 1 ). 1 implies SC decoder
+ * \param frozen_bit_positions sorted list of frozen bit positions
+ * \param error_detection_type Integer that specifies CRC size {0, 8, 16, 32}
+ * \param decoder_impl std::string that specifies the desired impl (e.g. mixed, float,
+ * char)
  *
  */
 class POLARWRAP_API decoderwrap : public gr::fec::generic_decoder
