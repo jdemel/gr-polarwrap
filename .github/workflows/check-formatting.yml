@@ -1,21 +1,30 @@
-name: Check Formatting
+name: Check C++ formatting with clang-format
 
 on:
   push:
     paths-ignore:
-      - 'swig/'
+      - "cmake/"
+      - "docs/"
+      - "examples/"
+      - "grc/"
+      - "swig/"
+
   pull_request:
     paths-ignore:
-      - 'swig/'
+      - "cmake/"
+      - "docs/"
+      - "examples/"
+      - "grc/"
+      - "swig/"
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: gnuradio/clang-format-lint-action@v0.5-4
-      with:
-        source: '.'
-        exclude: './swig'
-        extensions: 'c,cc,cpp,cxx,h,hh'
+      - uses: actions/checkout@v2.4.0
+      - uses: gnuradio/clang-format-lint-action@v0.5-4
+        with:
+          source: "."
+          exclude: "./swig"
+          extensions: "c,cc,cpp,cxx,h,hh"
