@@ -307,7 +307,7 @@ def sub_docstring_in_pydoc_h(pydoc_files, docstrings_dict, output_dir, filter_st
                     regexp = re.compile(regexp, re.MULTILINE)
 
                     (file_in, nsubs) = regexp.subn(
-                        r'\1'+value+r'\2', file_in, count=1)
+                        r'\1' + value + r'\2', file_in, count=1)
                     if nsubs == 1:
                         status_file.write("PASS: " + pydoc_file + "\n")
                 except KeyboardInterrupt:
