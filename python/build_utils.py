@@ -56,12 +56,14 @@ except KeyError, e:
 
 name_dict = {}
 
+
 def log_output_name(name):
     (base, ext) = os.path.splitext(name)
     ext = ext[1:]                       # drop the leading '.'
 
     entry = name_dict.setdefault(ext, [])
     entry.append(name)
+
 
 def open_and_log_name(name, dir):
     global do_sources
@@ -71,6 +73,7 @@ def open_and_log_name(name, dir):
         f = None
     log_output_name(name)
     return f
+
 
 def expand_template(d, template_filename, extra=""):
     '''Given a dictionary D and a TEMPLATE_FILENAME, expand template into output file
@@ -86,9 +89,11 @@ def expand_template(d, template_filename, extra=""):
         output.close()
     template.close()
 
+
 def output_glue(dirname):
     output_makefile_fragment()
     output_ifile_include(dirname)
+
 
 def output_makefile_fragment():
     global do_makefile
@@ -96,18 +101,21 @@ def output_makefile_fragment():
         return
 # overwrite the source, which must be writable; this should have been
 # checked for beforehand in the top-level Makefile.gen.gen .
-    f = open(os.path.join(os.environ.get('gendir', os.environ.get('srcdir', '.')), 'Makefile.gen'), 'w')
+    f = open(os.path.join(os.environ.get(
+        'gendir', os.environ.get('srcdir', '.')), 'Makefile.gen'), 'w')
     f.write('#\n# This file is machine generated.  All edits will be overwritten\n#\n')
     output_subfrag(f, 'h')
     output_subfrag(f, 'i')
     output_subfrag(f, 'cc')
     f.close()
 
+
 def output_ifile_include(dirname):
     global do_sources
     if do_sources:
         f = open('%s_generated.i' % (dirname,), 'w')
-        f.write('//\n// This file is machine generated.  All edits will be overwritten\n//\n')
+        f.write(
+            '//\n// This file is machine generated.  All edits will be overwritten\n//\n')
         files = name_dict.setdefault('i', [])
         files.sort()
         f.write('%{\n')
@@ -117,6 +125,7 @@ def output_ifile_include(dirname):
         for file in files:
             f.write('%%include <%s>\n' % (file,))
 
+
 def output_subfrag(f, ext):
     files = name_dict.setdefault(ext, [])
     files.sort()
@@ -124,6 +133,7 @@ def output_subfrag(f, ext):
     for file in files:
         f.write(" \\\n\t%s" % (file,))
     f.write("\n\n")
+
 
 def extract_extension(template_name):
     # template name is something like: GrFIRfilterXXX.h.t
@@ -133,9 +143,11 @@ def extract_extension(template_name):
         raise ValueError, "Incorrectly formed template_name '%s'" % (template_name,)
     return mo.group(1)
 
+
 def open_src(name, mode):
     global srcdir
     return open(os.path.join(srcdir, name), mode)
+
 
 def do_substitution(d, in_file, out_file):
     def repl(match_obj):
@@ -146,7 +158,6 @@ def do_substitution(d, in_file, out_file):
     inp = in_file.read()
     out = re.sub(r"@([a-zA-Z0-9_]+)@", repl, inp)
     out_file.write(out)
-
 
 
 copyright = '''/* -*- c++ -*- */
@@ -172,6 +183,7 @@ copyright = '''/* -*- c++ -*- */
  */
 '''
 
+
 def is_complex(code3):
     if i_code(code3) == 'c' or o_code(code3) == 'c':
         return '1'
@@ -183,7 +195,8 @@ def standard_dict(name, code3, package='gr'):
     d['NAME'] = name
     d['NAME_IMPL'] = name+'_impl'
     d['GUARD_NAME'] = 'INCLUDED_%s_%s_H' % (package.upper(), name.upper())
-    d['GUARD_NAME_IMPL'] = 'INCLUDED_%s_%s_IMPL_H' % (package.upper(), name.upper())
+    d['GUARD_NAME_IMPL'] = 'INCLUDED_%s_%s_IMPL_H' % (
+        package.upper(), name.upper())
     d['BASE_NAME'] = re.sub('^' + package + '_', '', name)
     d['SPTR_NAME'] = '%s_sptr' % name
     d['WARNING'] = 'WARNING: this file is machine generated. Edits will be overwritten'
@@ -209,6 +222,7 @@ def standard_dict2(name, code3, package):
     d['TAP_TYPE'] = tap_type(code3)
     d['IS_COMPLEX'] = is_complex(code3)
     return d
+
 
 def standard_impl_dict2(name, code3, package):
     d = {}
