@@ -1,0 +1,25 @@
+{
+    "title": "gr-polarwrap",
+    "description": "This is the GNU Radio block wrapper for `polar-codes`, a high-throughput, low-latency polar encoder/decoder implementation. This GNU Radio OOT module integrates `polar-codes` into GNU Radio's FECAPI.",
+    "license": {
+        "id": "GPL-3.0-or-later"
+    },
+    "keywords": [
+        "communication",
+        "software radio",
+        "SDR",
+        "GNU Radio",
+        "C++",
+        "FEC",
+        "error correction",
+        "polar codes",
+        "Python"
+    ],
+    "creators": [
+        {
+            "affiliation": "Department of Communications Engineering, University of Bremen, Germany",
+            "name": "Demel, Johannes",
+            "orcid": "0000-0002-5434-7232"
+        }
+    ]
+}
