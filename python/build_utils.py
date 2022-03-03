@@ -193,7 +193,7 @@ def is_complex(code3):
 def standard_dict(name, code3, package='gr'):
     d = {}
     d['NAME'] = name
-    d['NAME_IMPL'] = name+'_impl'
+    d['NAME_IMPL'] = name + '_impl'
     d['GUARD_NAME'] = 'INCLUDED_%s_%s_H' % (package.upper(), name.upper())
     d['GUARD_NAME_IMPL'] = 'INCLUDED_%s_%s_IMPL_H' % (
         package.upper(), name.upper())
