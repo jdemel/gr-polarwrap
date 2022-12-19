@@ -1,6 +1,5 @@
 {
     "title": "gr-polarwrap",
-    "description": "This is the GNU Radio block wrapper for `polar-codes`, a high-throughput, low-latency polar encoder/decoder implementation. This GNU Radio OOT module integrates `polar-codes` into GNU Radio's FECAPI.",
     "license": {
         "id": "GPL-3.0-or-later"
     },
@@ -14,6 +13,20 @@
         "error correction",
         "polar codes",
         "Python"
+    ],
+    "related_identifiers": [
+        {
+            "scheme": "doi",
+            "identifier": "10.5281/zenodo.2704343",
+            "relation": "requires",
+            "resource_type": "software"
+        },
+        {
+            "scheme": "doi",
+            "identifier": "10.5281/zenodo.6325747",
+            "relation": "requires",
+            "resource_type": "software"
+        }
     ],
     "creators": [
         {

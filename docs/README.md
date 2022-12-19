@@ -1,6 +1,7 @@
 # gr-polarwrap
 
-This is the GNU Radio block wrapper for `polar-codes`. An awesome high-throughput, low-latency polar encoder/decoder implementation.
+This is the GNU Radio block wrapper for [`polar-codes`](https://github.com/ant-uni-bremen/polar-codes). An awesome high-throughput, low-latency polar encoder/decoder implementation.
+This GNU Radio Out-of-Tree (OOT) module integrates `polar-codes` into the GNU Radio FECAPI.
 
 ## Install dependencies
 
