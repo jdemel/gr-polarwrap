@@ -55,6 +55,7 @@ requirements:
   run:
     - python
     - polar-codes
+    - gnuradio-symbolmapping
 
 test:
   commands:
