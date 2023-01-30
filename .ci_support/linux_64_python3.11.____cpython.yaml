@@ -6,6 +6,7 @@ cdt_name:
 - cos7
 channel_sources:
 - conda-forge
+- jdemel
 channel_targets:
 - jdemel main
 cxx_compiler:
