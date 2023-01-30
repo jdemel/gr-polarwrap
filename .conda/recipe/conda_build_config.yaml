@@ -3,8 +3,7 @@
 channel_targets:
   - jdemel main
 channel_sources:
-  - jdemel
-  - conda-forge
+  - jdemel,conda-forge
 # override the conda-forge pin for gnuradio-core by uncommenting
 # and specifying a different version here
 #gnuradio_core:
